@@ -1,0 +1,8 @@
+/.*
+
+# Ignored suffix
+*.log
+*.svg
+*.png
+*.ico
+*.webp

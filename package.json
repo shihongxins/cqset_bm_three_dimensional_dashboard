@@ -1,0 +1,48 @@
+{
+  "name": "bm_three_dimensional_dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "commit": "cz"
+  },
+  "dependencies": {
+    "pinia": "^2.1.7",
+    "vue": "^3.4.15",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.6.0",
+    "@commitlint/config-conventional": "^18.6.0",
+    "@rushstack/eslint-patch": "^1.3.3",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "commitizen": "^4.3.0",
+    "cz-git": "^1.8.0",
+    "eslint": "^8.49.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-vue": "^9.17.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.0",
+    "postcss": "^8.4.33",
+    "postcss-html": "^1.6.0",
+    "postcss-nested": "^6.0.1",
+    "postcss-preset-env": "^9.3.0",
+    "postcss-scss": "^4.0.9",
+    "prettier": "^3.0.3",
+    "sass": "^1.70.0",
+    "vite": "^5.0.11",
+    "vite-plugin-eslint": "^1.8.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-git"
+    }
+  }
+}
