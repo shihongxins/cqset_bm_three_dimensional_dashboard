@@ -17,6 +17,7 @@ module.exports = {
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'error',
+    'no-debugger': 'warn'
   },
   parserOptions: {
     ecmaVersion: 'latest',
