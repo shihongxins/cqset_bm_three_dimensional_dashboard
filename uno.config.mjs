@@ -18,6 +18,12 @@ export default defineConfig({
           return readFile('./src/assets/icons/svgs/' + iconName + '.svg', 'utf-8');
         },
       },
+      extraProperties: {
+        display: 'inline-block',
+        'vertical-align': 'middle',
+        position: 'relative',
+        top: '-0.125em',
+      },
     }),
     presetAttributify({
       prefix: 'un-',
