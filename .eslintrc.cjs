@@ -18,6 +18,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'no-debugger': 'warn',
+    'no-unused-vars': 'warn',
     'vue/multi-word-component-names': 'off',
   },
   parserOptions: {

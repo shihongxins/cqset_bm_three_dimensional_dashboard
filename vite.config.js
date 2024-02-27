@@ -3,6 +3,8 @@ import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import eslintPlugin from 'vite-plugin-eslint';
 import UnoCSS from 'unocss/vite';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -15,7 +17,7 @@ export default defineConfig(({ mode }) => {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
-    plugins: [vue(), eslintPlugin(), UnoCSS()],
+    plugins: [vue(), eslintPlugin(), UnoCSS(), AutoImport(), Components()],
     css: {
       preprocessorOptions: {
         sass: {},

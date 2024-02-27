@@ -21,6 +21,7 @@ export default defineConfig({
       extraProperties: {
         display: 'inline-block',
         'vertical-align': 'middle',
+        'line-height': 1,
         position: 'relative',
         top: '-0.125em',
       },
