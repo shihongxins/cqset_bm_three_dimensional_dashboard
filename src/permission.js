@@ -21,7 +21,7 @@ request.interceptors.request.use((config) => {
         } else {
           delete request.defaults.headers.common['token'];
           delete config.headers['token'];
-          router.push('/login');
+          // router.push('/login');
           return Promise.reject(errorHandler.auth({}, null, null, 'Token 已过期，请重新登录'));
         }
       }

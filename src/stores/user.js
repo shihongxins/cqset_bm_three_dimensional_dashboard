@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { useStorage } from './useStorage';
 import { request } from '@/apis/request';
 
-const userStorage = useStorage('TPI-USER', 'localStorage');
+const userStorage = useStorage('TPI-USER', 'sessionStorage');
 
 export const useUserStore = defineStore('user', () => {
   const user = ref(null);
@@ -29,7 +29,12 @@ export const useUserStore = defineStore('user', () => {
   }
 
   function validate() {
-    refresh();
+    if (token.value) {
+      const expiresAt = new Date(user.value.time) + 3 * 24 * 60 * 60 * 1000;
+      if (expiresAt < new Date()) {
+        refresh();
+      }
+    }
     return Boolean(token.value);
   }
 
