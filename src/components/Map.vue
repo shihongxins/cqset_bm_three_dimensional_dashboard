@@ -1,9 +1,10 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import { loadScript } from '@/utils';
   // import MapStyle from '@/assets/MapStyle.json';
   import { request } from '@/apis/request';
   import IconImgElectricTower from '@/assets/icons/imgs/electric tower.png';
+  import { useUserStore } from '@/stores/user';
 
   const BMap = ref(null);
   const map = ref(null);
@@ -37,7 +38,7 @@
       map.value.enableMapClick(true);
       map.value.enableScrollWheelZoom(true);
       // map.value.setMapStyle({ styleJson: MapStyle });
-      console.log('地图加载完成');
+      map.value.setMapType(window.BMAP_HYBRID_MAP);
       map.value.addControl(new BMap.value.ScaleControl());
       const GeolocationControl = new BMap.value.GeolocationControl();
       GeolocationControl.setAnchor(window.BMAP_ANCHOR_BOTTOM_RIGHT);
@@ -47,6 +48,10 @@
       MapTypeControl.setAnchor(window.BMAP_ANCHOR_BOTTOM_RIGHT);
       map.value.addControl(MapTypeControl);
       */
+      ['moving', 'zoomend'].forEach((item) => {
+        map.value.addEventListener(item, updatePopoverPosition);
+      });
+      map.value.addEventListener('click', hidePopover);
       loadTowerList();
     }
   }
@@ -55,6 +60,7 @@
   async function loadTowerList() {
     towerList.value = [];
     map.value.clearOverlays();
+    hidePopover();
     const resData = await request
       .post('/pc/tower/list', {
         keyword: '',
@@ -96,6 +102,9 @@
           title: tower.name,
         });
         marker.setLabel(label);
+        marker.addEventListener('click', () => {
+          loadProjectList(tower);
+        });
         map.value.addOverlay(marker);
         tower.marker = marker;
       }
@@ -108,9 +117,123 @@
     }
   }
 
+  const projectList = ref([]);
+  const refTowerProjectListPopover = ref(null);
+  async function loadProjectList(tower) {
+    if (!(tower && tower?.id && tower.marker)) return;
+    projectList.value = [];
+    const resData = await request
+      .post('/project/list', {
+        tower_id: tower.id,
+        keyword: '',
+        page: 1,
+        size: 100,
+        sort: 'asc',
+      })
+      .catch((reason) => reason);
+    if (resData?.code === 200) {
+      projectList.value = resData.data;
+      refTowerProjectListPopover.value.show();
+      refTowerProjectListPopover.value.setPosition(tower.marker.kd);
+    }
+  }
+  const refProjectMenuPopover = ref(null);
+  function projectMenuToggle(event) {
+    if (event?.target?.classList?.contains('menu__item') && !event?.target?.classList?.contains('disabled')) {
+      refProjectMenuPopover.value.show(event);
+    }
+  }
+
+  function hidePopover(event) {
+    refProjectMenuPopover.value?.state === 'open' && refProjectMenuPopover.value.hide();
+    if (!event?.overlay && refTowerProjectListPopover.value?.state === 'open') {
+      refTowerProjectListPopover.value.hide();
+    }
+  }
+
+  function updatePopoverPosition() {
+    if (refProjectMenuPopover.value?.state === 'open') {
+      refProjectMenuPopover.value.hide();
+    }
+    if (refTowerProjectListPopover.value?.state === 'open') {
+      refTowerProjectListPopover.value.setPosition();
+    }
+  }
+
   initMap();
+
+  const userStore = useUserStore();
+  watch(
+    () => userStore?.token,
+    (newVal, oldVal) => {
+      if (newVal !== oldVal) loadTowerList();
+    }
+  );
 </script>
 
 <template>
-  <div id="map" un-h-full un-overflow-hidden un-pos-relative></div>
+  <div class="map__container" un-h-full un-overflow-hidden un-pos-relative>
+    <div id="map" un-h-full></div>
+    <Popover placement="left" offset="15">
+      <template #reference="slotProps">
+        <div
+          class="map__toolbar"
+          un-rounded
+          un-w-8
+          un-h-8
+          un-flex
+          un-justify-center
+          un-items-center
+          un-bg-white
+          v-bind="slotProps"
+        >
+          <i class="i-local-icons:settings"></i>
+        </div>
+      </template>
+      <ul class="menu__list">
+        <li class="menu__item" @click="loadTowerList">
+          <i class="i-local-icons:refresh"></i>
+          刷新杆塔
+        </li>
+      </ul>
+    </Popover>
+    <Popover ref="refTowerProjectListPopover" placement="right" offset="15" interactive-method="manual">
+      <ul class="menu__list" @click="projectMenuToggle">
+        <template v-if="projectList.length">
+          <li class="menu__item" v-for="project in projectList" :key="project.id">
+            {{ project.name }}
+          </li>
+        </template>
+        <li class="menu__item disabled" disabled v-else>此杆塔未绑定项目</li>
+      </ul>
+    </Popover>
+    <Popover
+      ref="refProjectMenuPopover"
+      placement="right-start"
+      :offset="[10, 0]"
+      interactive-method="manual"
+      :arrow="false"
+    >
+      <ul class="menu__list">
+        <li class="menu__item">局放视频</li>
+        <li class="menu__item">现场环境</li>
+        <li class="menu__item">三维模型</li>
+      </ul>
+    </Popover>
+  </div>
 </template>
+
+<style lang="scss" scoped>
+  .map__toolbar {
+    position: absolute;
+    right: 10px;
+    bottom: 70px;
+    padding: 1px;
+    cursor: pointer;
+    i {
+      top: 0;
+      font-size: 20px;
+      color: #777;
+    }
+  }
+</style>
