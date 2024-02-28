@@ -1,6 +1,6 @@
 <script>
   export default {
-    name: 'popover-test',
+    name: 'Popover',
     props: {
       tagName: {
         type: String,
@@ -70,12 +70,14 @@
           popoverOverlay.referenceElement = event.target;
           this.setPosition(event.target);
         }
+        this.$emit('show', this.state, event);
       },
       hide(event) {
         this.state = 'closed';
         const popoverOverlay = this.$el.querySelector('.popover__overlay');
         popoverOverlay.referenceElement = null;
         popoverOverlay.hidePopover();
+        this.$emit('hide', this.state, event);
       },
       toggle(event) {
         if (this.state === 'open') {
@@ -83,6 +85,7 @@
         } else {
           this.show(event);
         }
+        this.$emit('toggle', this.state, event);
       },
       /**
        * @param {String|Element} [reference]
