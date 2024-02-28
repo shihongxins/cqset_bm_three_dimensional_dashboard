@@ -28,3 +28,9 @@ body {
     }
   }
 }
+
+.el-dialog {
+  &.el-dialog-layout--noheader {
+    --el-dialog-padding-primary: 0;
+  }
+}

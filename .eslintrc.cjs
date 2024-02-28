@@ -24,4 +24,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
   },
+  globals: {
+    __APP_RESOURCE_URL__: 'readonly',
+  }
 };

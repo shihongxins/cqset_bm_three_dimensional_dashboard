@@ -58,6 +58,10 @@
 
   const towerList = ref([]);
   async function loadTowerList() {
+    if (!map.value) {
+      await initMap();
+      return;
+    }
     towerList.value = [];
     map.value.clearOverlays();
     hidePopover();
@@ -137,10 +141,27 @@
       refTowerProjectListPopover.value.setPosition(tower.marker.kd);
     }
   }
+  const selectedProject = ref(null);
   const refProjectMenuPopover = ref(null);
-  function projectMenuToggle(event) {
-    if (event?.target?.classList?.contains('menu__item') && !event?.target?.classList?.contains('disabled')) {
+  function projectMenuToggle(event, project) {
+    if (
+      event?.target?.classList?.contains('menu__item') &&
+      !event?.target?.classList?.contains('disabled') &&
+      project?.id
+    ) {
+      selectedProject.value = project;
       refProjectMenuPopover.value.show(event);
+    }
+  }
+  const refDialogInMap = ref(null);
+  function projectMenuClick(event) {
+    if (!selectedProject.value?.id) return;
+    if (event?.target?.classList?.contains('menu__item') && !event?.target?.classList?.contains('disabled')) {
+      const menuCommand = event?.target?.dataset?.command || event?.target?.getAttribute('command');
+      if (menuCommand) {
+        refDialogInMap.value.show(menuCommand, selectedProject.value);
+        hidePopover();
+      }
     }
   }
 
@@ -197,10 +218,21 @@
         </li>
       </ul>
     </Popover>
-    <Popover ref="refTowerProjectListPopover" placement="right" offset="15" interactive-method="manual">
-      <ul class="menu__list" @click="projectMenuToggle">
+    <Popover
+      ref="refTowerProjectListPopover"
+      placement="right"
+      offset="15"
+      interactive-method="manual"
+      @hide="() => (selectedProject = null)"
+    >
+      <ul class="menu__list">
         <template v-if="projectList.length">
-          <li class="menu__item" v-for="project in projectList" :key="project.id">
+          <li
+            class="menu__item"
+            v-for="project in projectList"
+            :key="project.id"
+            @click="projectMenuToggle($event, project)"
+          >
             {{ project.name }}
           </li>
         </template>
@@ -214,12 +246,13 @@
       interactive-method="manual"
       :arrow="false"
     >
-      <ul class="menu__list">
-        <li class="menu__item">局放视频</li>
-        <li class="menu__item">现场环境</li>
-        <li class="menu__item">三维模型</li>
+      <ul class="menu__list" @click="projectMenuClick">
+        <li class="menu__item" command="video">局放视频</li>
+        <li class="menu__item" command="panorama">现场环境</li>
+        <li class="menu__item" command="model">三维模型</li>
       </ul>
     </Popover>
+    <DialogInMap ref="refDialogInMap"></DialogInMap>
   </div>
 </template>
 

@@ -1,35 +1,14 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { useFullscreenEffect } from '@/composables/useFullscreenEffect';
 
-  const isFullscreen = ref(false);
-  const checkIsFullscreen = () => {
-    isFullscreen.value = document.fullscreenElement !== null;
-  };
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-    checkIsFullscreen();
-  };
-  const fullscreenBtnAttrs = computed(() => ({
-    title: isFullscreen.value ? '退出全屏' : '进入全屏',
-    class: isFullscreen.value ? 'i-local-icons:fullscreen-exit' : 'i-local-icons:fullscreen',
-  }));
-  onMounted(() => {
-    document.addEventListener('fullscreenchange', checkIsFullscreen);
-    checkIsFullscreen();
-  });
+  const { fullscreenAttrs, toggle } = useFullscreenEffect();
 </script>
 
 <template>
   <header class="header">
     <h1>基于配电带电作业全程智能化辅助软件</h1>
     <nav class="nav">
-      <a v-bind="fullscreenBtnAttrs" @click="toggleFullscreen"></a>
+      <a v-bind="fullscreenAttrs" @click="toggle"></a>
     </nav>
   </header>
 </template>

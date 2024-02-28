@@ -5,11 +5,13 @@ import eslintPlugin from 'vite-plugin-eslint';
 import UnoCSS from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-  console.log('import.meta', import.meta, env);
+  const __APP_RESOURCE_URL__ = JSON.stringify(mode === 'development' ? env.VITE_ORIGIN : 'window.origin');
+  console.log('import.meta', mode, import.meta, env, __APP_RESOURCE_URL__);
   return {
     base: env.VITE_BASE,
     resolve: {
@@ -17,7 +19,17 @@ export default defineConfig(({ mode }) => {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
-    plugins: [vue(), eslintPlugin(), UnoCSS(), AutoImport(), Components()],
+    plugins: [
+      vue(),
+      eslintPlugin(),
+      UnoCSS(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+    ],
     css: {
       preprocessorOptions: {
         sass: {},
@@ -31,6 +43,9 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
         },
       },
+    },
+    define: {
+      __APP_RESOURCE_URL__,
     },
   };
 });

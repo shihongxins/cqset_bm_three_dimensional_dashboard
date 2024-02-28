@@ -26,7 +26,6 @@
       .catch((err) => err)
       .then((resData) => {
         console.log(resData);
-        debugger;
       });
     e.preventDefault ? e.preventDefault() : (e.returnValue = false);
     return false;
