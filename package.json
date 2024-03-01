@@ -13,6 +13,8 @@
     "commit": "cz"
   },
   "dependencies": {
+    "@photo-sphere-viewer/core": "^5.7.1",
+    "@photo-sphere-viewer/markers-plugin": "^5.7.1",
     "@unocss/reset": "^0.58.4",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.6.7",

@@ -84,7 +84,7 @@
 </script>
 
 <template>
-  <ElDialog class="el-dialog-layout--noheader" v-model="visible" :show-close="false" :destroy-on-close="true">
+  <ElDialog class="el-dialog-layout--noheader" v-model="visible" :show-close="false" destroy-on-close>
     <div class="player" un-p-2 un-h-50vh un-overflow-hidden un-flex un-flex-wrap ref="refPlayer">
       <div un-rounded un-px-2 un-h-8 un-w-full un-overflow-hidden un-bg-stone-800 un-flex un-items-center>
         <h4 un-m-2 un-flex-1 un-text-truncate un-text-stone>
@@ -95,7 +95,7 @@
           <a class="i-local-icons:close" title="关闭" @click="visible = false"></a>
         </div>
       </div>
-      <div class="player__video--wrapper" un-flex-1 un-overflow-hidden un-flex-col>
+      <div class="player__video--wrapper" un-flex-1 un-overflow-hidden>
         <video controls muted autoplay loop un-w-full un-h-full :src="currentPlayURL"></video>
       </div>
       <aside class="player__aside" un-w-50 un-flex un-flex-col un-bg-stone-900 un-color-stone-400>

@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@photo-sphere-viewer/core':
+    specifier: ^5.7.1
+    version: 5.7.1
+  '@photo-sphere-viewer/markers-plugin':
+    specifier: ^5.7.1
+    version: 5.7.1(@photo-sphere-viewer/core@5.7.1)
   '@unocss/reset':
     specifier: ^0.58.4
     version: 0.58.4
@@ -1497,6 +1503,22 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.0
     dev: true
+
+  /@photo-sphere-viewer/core@5.7.1:
+    resolution:
+      { integrity: sha512-2wwErCpRiCee8mv9k5YAr4itMrAh2DL9dHriaOysS84xRJcmEZBMZXfhTuTFEdBvEq0o8Iv/gKheQvCrbLyv5w== }
+    dependencies:
+      three: 0.161.0
+    dev: false
+
+  /@photo-sphere-viewer/markers-plugin@5.7.1(@photo-sphere-viewer/core@5.7.1):
+    resolution:
+      { integrity: sha512-YWClibF4RWDKrVY7loJ9E/QBi1uWIPPv72cVtM4gIYbLdVDeNtc7vbNdUgsbFBesqWIhKM/9l2aYKZ3a7fYoIw== }
+    peerDependencies:
+      '@photo-sphere-viewer/core': 5.7.1
+    dependencies:
+      '@photo-sphere-viewer/core': 5.7.1
+    dev: false
 
   /@pkgr/core@0.1.1:
     resolution:
@@ -5512,6 +5534,11 @@ packages:
     resolution:
       { integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw== }
     dev: true
+
+  /three@0.161.0:
+    resolution:
+      { integrity: sha512-LC28VFtjbOyEu5b93K0bNRLw1rQlMJ85lilKsYj6dgTu+7i17W+JCCEbvrpmNHF1F3NAUqDSWq50UD7w9H2xQw== }
+    dev: false
 
   /through2@4.0.2:
     resolution:
