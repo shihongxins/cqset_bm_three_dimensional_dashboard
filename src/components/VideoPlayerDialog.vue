@@ -36,6 +36,7 @@
       size: 10,
       sort: 'desc',
     });
+    loading.value = false;
     if (resData?.code === 200) {
       const list = resData.data.map((item) => ({
         ...item,
@@ -81,10 +82,29 @@
 
   const refPlayer = ref(null);
   const { fullscreenAttrs, toggle: toggleFullscreen } = useFullscreenEffect(refPlayer);
+
+  function refreshPlayInfo() {
+    resetPlayInfo();
+    fetchPlaylist();
+  }
+
+  function resetPlayInfo() {
+    playlist.value = [];
+    page.value = 1;
+    finished.value = false;
+    currentItemIndex.value = -1;
+  }
 </script>
 
 <template>
-  <ElDialog class="el-dialog-layout--noheader" v-model="visible" :show-close="false" destroy-on-close>
+  <ElDialog
+    class="el-dialog-layout--noheader"
+    v-model="visible"
+    :show-close="false"
+    destroy-on-close
+    @open="refreshPlayInfo"
+    @close="resetPlayInfo"
+  >
     <div class="player" un-p-2 un-h-50vh un-overflow-hidden un-flex un-flex-wrap ref="refPlayer">
       <div un-rounded un-px-2 un-h-8 un-w-full un-overflow-hidden un-bg-stone-800 un-flex un-items-center>
         <h4 un-m-2 un-flex-1 un-text-truncate un-text-stone>
